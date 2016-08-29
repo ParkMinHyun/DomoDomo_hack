@@ -37,15 +37,16 @@ void setup() {
 }
 
 void loop() {
-  int button1 = digitalRead(2);
-    Serial.println(button1);
-    
-   if (button1 == 0) {
-      if (! musicPlayer.paused()) {
-        Serial.println("Paused");
+  int play_stop_button = digitalRead(2);
+  
+  if (play_stop_button == 0) 
+  {
+      if (! musicPlayer.paused()) 
+      {
         musicPlayer.pausePlaying(true);
-      } else { 
-        Serial.println("Resumed");
+      } 
+      else 
+      { 
         musicPlayer.pausePlaying(false);
       }
     }
@@ -54,23 +55,6 @@ void loop() {
     Serial.println("Done playing music");
     while (1);
   }
-  if (Serial.available()) {
-    char c = Serial.read();
-    
-    if (c == 's') {
-      musicPlayer.stopPlaying();
-    }
-    
-    if (c == 'p') {
-      if (! musicPlayer.paused()) {
-        Serial.println("Paused");
-        musicPlayer.pausePlaying(true);
-      } else { 
-        Serial.println("Resumed");
-        musicPlayer.pausePlaying(false);
-      }
-    }
-  }
-
+  
   delay(100);
 }
