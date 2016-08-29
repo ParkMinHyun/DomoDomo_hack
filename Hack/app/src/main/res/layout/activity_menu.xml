@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:weightSum="1">
+
+
+    <Button
+        android:textSize="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Record"
+        android:id="@+id/btn_Record"
+        android:layout_weight="0.25"
+        android:layout_gravity="center_horizontal"
+        android:background="#FFE57F"/>
+
+    <Button
+        android:textSize="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Music"
+        android:id="@+id/btn_Music"
+        android:layout_weight="0.25"
+        android:layout_gravity="center_horizontal"
+        android:background="#FFD740"/>
+
+    <Button
+        android:textSize="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LED"
+        android:id="@+id/btn_LED"
+        android:layout_weight="0.25"
+        android:layout_gravity="center_horizontal"
+        android:background="#FFC400"
+        />
+
+    <Button
+        android:textSize="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Download Music"
+        android:id="@+id/btn_Downmusic"
+        android:layout_weight="0.25"
+        android:layout_gravity="center_horizontal"
+        android:background="#FFAB00"/>
+
+</LinearLayout>
