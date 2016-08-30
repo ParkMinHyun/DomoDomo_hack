@@ -14,9 +14,9 @@ import android.widget.Button;
 
 import java.util.Set;
 
-import ensharp.tapcorder.Arduino.ControlArduino;
 import ensharp.tapcorder.LED.Activity_LED;
 import ensharp.tapcorder.Music.Activity_Music;
+import ensharp.tapcorder.Record.ProgressRecorder;
 
 
 public class MainActivity extends BT_Preference {
@@ -39,7 +39,7 @@ public class MainActivity extends BT_Preference {
         btn_record = (Button)findViewById(R.id.btn_Record);
         btn_record.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
-                startActivity(new Intent(MainActivity.this, ControlArduino.class));
+                startActivity(new Intent(MainActivity.this, ProgressRecorder.class));
             }
         });
         btn_musicFiles = (Button)findViewById(R.id.btn_Music);

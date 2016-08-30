@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Arduino.ControlArduino"></activity>
+            android:name=".Record.ProgressRecorder"></activity>
         <activity android:name=".LED.Activity_LED"/>
         <activity android:name=".Music.Activity_Music"/>
     </application>
