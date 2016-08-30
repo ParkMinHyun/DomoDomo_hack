@@ -2,6 +2,9 @@
 #include <Adafruit_VS1053.h>
 #include <SD.h>
 
+unsigned long prevMillis = 0;
+int ledState = LOW;
+
 #define BREAKOUT_RESET  9      // VS1053 reset pin (output)
 #define BREAKOUT_CS     10     // VS1053 chip select pin (output)
 #define BREAKOUT_DCS    8      // VS1053 Data/command select pin (output)
@@ -19,16 +22,12 @@ Adafruit_VS1053_FilePlayer musicPlayer =
 void setup() {
   Serial.begin(9600);
   pinMode(2,INPUT_PULLUP);
-  Serial.println("Adafruit VS1053 Simple Test");
 
   if (! musicPlayer.begin()) { 
-     Serial.println(F("Couldn't find VS1053, do you have the right pins defined?"));
-     while (1);
+      while (1);
   }
-  Serial.println(F("VS1053 found"));
   
   SD.begin(CARDCS);    // initialise the SD card
-  
   musicPlayer.setVolume(20,20);
   musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT);  // DREQ int
   
@@ -37,7 +36,24 @@ void setup() {
 }
 
 void loop() {
+
+  
   int play_stop_button = digitalRead(2);
+  unsigned long currentMillis = millis(); 
+
+  if(currentMillis - prevMillis >= 1000)
+  { 
+    musicPlayer.GPIO_pinMode(0, OUTPUT);
+    if (ledState == LOW){ //꺼져있으면
+      ledState = HIGH; //키고
+    } else {            //켜져있으면
+      ledState = LOW;   //끄고
+    }
+     
+    musicPlayer.GPIO_digitalWrite(0, ledState);
+    prevMillis = currentMillis;
+  }
+
   
   if (play_stop_button == 0) 
   {
