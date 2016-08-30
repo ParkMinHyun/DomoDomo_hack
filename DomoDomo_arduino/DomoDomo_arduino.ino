@@ -53,8 +53,7 @@ void loop() {
     musicPlayer.GPIO_digitalWrite(0, ledState);
     prevMillis = currentMillis;
   }
-
-  
+  /*
   if (play_stop_button == 0) 
   {
       if (! musicPlayer.paused()) 
@@ -66,11 +65,15 @@ void loop() {
         musicPlayer.pausePlaying(false);
       }
     }
-    
+    */
+  if (play_stop_button == 0) 
+  {
+    musicPlayer.startPlayingFile("001.mp3");
+  }
+  
   if (musicPlayer.stopped()) {
     Serial.println("Done playing music");
     while (1);
   }
   
-  delay(100);
 }
