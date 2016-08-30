@@ -37,7 +37,7 @@ import ensharp.tapcorder.R;
 import ensharp.tapcorder.Arduino.ScreenReceiver;
 //import Smarthangles.org.R;
 
-public class ProgressRecorder extends BT_Preference implements View.OnClickListener, MediaPlayer.OnCompletionListener {
+public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnInitListener,View.OnClickListener, MediaPlayer.OnCompletionListener {
 
 //    class MyThread extends Thread {
 //        @Override
@@ -168,6 +168,7 @@ public class ProgressRecorder extends BT_Preference implements View.OnClickListe
         // 전화가 온다거나 다른 작업을 할 경우에는 블루투스 연결을 끊도록 하기위해서
         // 계속 연결 상태를 유지 하려면 이부분을 없애면 됩니다.
 
+        tts = new TextToSpeech(this, this);
         final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         final BroadcastReceiver mReceiver = new ScreenReceiver();
@@ -266,11 +267,8 @@ public class ProgressRecorder extends BT_Preference implements View.OnClickListe
 
             //재생되는지 테스팅
             try {
-                mBtnStartPlayOnClick(mDatas.get(position));
-//                String msg = String.valueOf(position);
-//                msg = msg.trim();
-//                msg += "\n";
-//                mmOutputStream.write(String.valueOf(position).getBytes());
+                //mBtnStartPlayOnClick(mDatas.get(position));
+                sendData(String.valueOf(position));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -503,7 +501,7 @@ public class ProgressRecorder extends BT_Preference implements View.OnClickListe
                 Thread.sleep(500);
 
             } catch (InterruptedException e) { }
-            closeBT();
+            //closeBT();
             try {
 
                 Thread.sleep(1000);
@@ -519,6 +517,14 @@ public class ProgressRecorder extends BT_Preference implements View.OnClickListe
 
 
         super.onBackPressed();
+    }
+    public void sendData(String msg) throws IOException
+    {
+        //String msg = myTextbox.getText().toString();
+        msg = msg.trim();
+        msg += "\n";
+        mmOutputStream.write(msg.getBytes());
+        //info_textview.setText("Data Sent");
     }
 
     //tts가 초기화 되고 초기화가 성공하면 블루투스를 찾아서 연결하도록 했다.
@@ -582,7 +588,7 @@ public class ProgressRecorder extends BT_Preference implements View.OnClickListe
                     Thread.sleep(1000);
 
                 } catch (InterruptedException e) { }
-                closeBT();
+                //closeBT();
 
 
 
