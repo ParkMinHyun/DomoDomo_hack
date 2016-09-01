@@ -3,7 +3,14 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1">
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="     LED"
+        android:textSize="20dp"
+        android:id="@+id/textView2"
+        android:gravity="fill_horizontal|center"
+        android:background="#FF6B6B" />
     <TextView
         android:layout_width="72dp"
         android:layout_height="wrap_content"

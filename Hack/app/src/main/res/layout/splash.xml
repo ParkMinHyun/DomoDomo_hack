@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#9400D3">
+
+    <!--android:background="#A600D3">-->
+
+<!--android:background="#FFCC00">-->
+
+    <!--android:background="#D300A9">-->
+    <!--android:background="#533A71">-->
+    <!--android:background="#CD00CD">-->
+    <!--android:background="#551033">-->
+<ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/logo"
+    android:layout_centerHorizontal="true"
+    android:layout_centerInParent="true"/>
+</RelativeLayout>

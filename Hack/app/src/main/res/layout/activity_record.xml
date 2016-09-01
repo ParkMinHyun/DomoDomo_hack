@@ -3,7 +3,14 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="     Record"
+        android:textSize="20dp"
+        android:id="@+id/textView2"
+        android:gravity="fill_horizontal|center"
+        android:background="#C7F464" />
     <!-- progress bar -->
     <LinearLayout
         android:layout_width="fill_parent"
