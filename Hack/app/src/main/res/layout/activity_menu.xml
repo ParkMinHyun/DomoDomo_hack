@@ -15,17 +15,17 @@
         android:id="@+id/btn_Record"
         android:layout_weight="0.25"
         android:layout_gravity="center_horizontal"
-        android:background="#FFE57F"/>
+        android:background="#4ECDC4"/>
 
     <Button
         android:textSize="25dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Music"
+        android:text="Play Music"
         android:id="@+id/btn_Music"
         android:layout_weight="0.25"
         android:layout_gravity="center_horizontal"
-        android:background="#FFD740"/>
+        android:background="#C7F464"/>
 
     <Button
         android:textSize="25dp"
@@ -35,7 +35,7 @@
         android:id="@+id/btn_LED"
         android:layout_weight="0.25"
         android:layout_gravity="center_horizontal"
-        android:background="#FFC400"
+        android:background="#FF6B6B"
         />
 
     <Button
@@ -46,6 +46,6 @@
         android:id="@+id/btn_Downmusic"
         android:layout_weight="0.25"
         android:layout_gravity="center_horizontal"
-        android:background="#FFAB00"/>
+        android:background="#C44D58"/>
 
 </LinearLayout>

@@ -35,6 +35,8 @@ public class MainActivity extends BT_Preference {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
+        Intent intent=new Intent(this,Splash.class);
+        this.startActivity(intent);
 
         btn_record = (Button)findViewById(R.id.btn_Record);
         btn_record.setOnClickListener(new Button.OnClickListener(){
