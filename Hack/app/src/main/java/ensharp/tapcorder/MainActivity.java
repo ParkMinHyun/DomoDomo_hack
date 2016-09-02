@@ -66,10 +66,7 @@ public class MainActivity extends BT_Preference {
         btn_downMusic.setTypeface(tf_menu);
         btn_downMusic.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
-
-                ////////////////////////////////////////
-                //명호야 여기서 해!               ///////
-                ///////////////////////////////////////
+                startActivity(new Intent(MainActivity.this, ServerActivity.class));
             }
         });
 
