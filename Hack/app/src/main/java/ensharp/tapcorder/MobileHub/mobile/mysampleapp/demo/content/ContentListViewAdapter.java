@@ -135,9 +135,13 @@ public class ContentListViewAdapter extends ArrayAdapter<ContentListItem>
         final String displayName = contentItem.getFilePath()
             .substring(pathProvider.getCurrentPath()
                 .length());
-        fileNameText.setText(displayName.isEmpty() ? ".." : displayName);
+        if(!displayName.contains("mp3")) {
+            fileNameText.setText(displayName.isEmpty() ? ".." : displayName.substring(0, displayName.length()-1));
+        } else{
+            fileNameText.setText(displayName.isEmpty() ? ".." : displayName);
+        }
         fileNameText.setTextColor(
-            ContentState.REMOTE_DIRECTORY.equals(contentItem.getContentState()) ? Color.BLUE : Color.BLACK);
+            ContentState.REMOTE_DIRECTORY.equals(contentItem.getContentState()) ? Color.BLACK : Color.BLACK);
 
         ContentState contentState = contentItem.getContentState();
         if (ContentState.REMOTE_DIRECTORY.equals(contentState)) {

@@ -6,8 +6,8 @@
     <dimen name="version_size">5pt</dimen>
     <dimen name="version_spacing">3pt</dimen>
     <dimen name="screen_title_size">16pt</dimen>
-    <dimen name="menu_item_size">16pt</dimen>
+    <dimen name="menu_item_size">20pt</dimen>
     <dimen name="help_text_size">10pt</dimen>
-    <dimen name="text_size_small_medium">16sp</dimen>
+    <dimen name="text_size_small_medium">20sp</dimen>
     <dimen name="demo_mobile_analytics_button_text_size">12sp</dimen>
 </resources>

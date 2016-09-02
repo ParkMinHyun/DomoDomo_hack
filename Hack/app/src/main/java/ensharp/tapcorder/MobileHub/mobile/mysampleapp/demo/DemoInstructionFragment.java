@@ -93,6 +93,7 @@ public class DemoInstructionFragment extends DemoFragmentBase {
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                         .commit();
                     activity.getSupportActionBar().setTitle(item.titleResId);
+                    activity.getSupportActionBar().hide();
                 }
             }
         });

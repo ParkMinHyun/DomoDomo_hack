@@ -19,14 +19,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 
 import ensharp.tapcorder.MobileHub.mobile.AWSMobileClient;
 import ensharp.tapcorder.MobileHub.mobile.mysampleapp.demo.UserFilesDemoFragment;
@@ -35,24 +31,6 @@ import ensharp.tapcorder.MobileHub.mobile.mysampleapp.demo.UserSettings;
 public class ServerActivity extends AppCompatActivity implements View.OnClickListener {
     /** Class name for log messages. */
     private final static String LOG_TAG = ServerActivity.class.getSimpleName();
-
-    /** Bundle key for saving/restoring the toolbar title. */
-    private final static String BUNDLE_KEY_TOOLBAR_TITLE = "title";
-
-    /** The helper class used to toggle the left navigation drawer open and closed. */
-    private ActionBarDrawerToggle drawerToggle;
-
-
-    /**
-     * Initializes the navigation drawer menu to allow toggling via the toolbar or swipe from the
-     * side of the screen.
-     */
-    private void setupNavigationMenu(final Bundle savedInstanceState) {
-        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        final ListView drawerItems = (ListView) findViewById(R.id.nav_drawer_items);
-
-    }
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,10 +41,6 @@ public class ServerActivity extends AppCompatActivity implements View.OnClickLis
 
         final FragmentManager fragmentManager = this.getSupportFragmentManager();
 
-        setContentView(R.layout.activity_server);
-
-        setupNavigationMenu(savedInstanceState);
-
         final Class fragmentClass = UserFilesDemoFragment.class;
         // if we aren't on the home fragment, navigate home.
         final Fragment fragment = Fragment.instantiate(this, fragmentClass.getName());
@@ -76,7 +50,7 @@ public class ServerActivity extends AppCompatActivity implements View.OnClickLis
                 .replace(R.id.main_fragment_container, fragment, fragmentClass.getSimpleName())
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
-
+        setContentView(R.layout.activity_server);
     }
 
     @Override
@@ -137,11 +111,6 @@ public class ServerActivity extends AppCompatActivity implements View.OnClickLis
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                         .commit();
 
-                // Set the title for the fragment.
-                final ActionBar actionBar = this.getSupportActionBar();
-                if (actionBar != null) {
-                    actionBar.setTitle(getString(R.string.app_name));
-                }
                 return;
             }
         }

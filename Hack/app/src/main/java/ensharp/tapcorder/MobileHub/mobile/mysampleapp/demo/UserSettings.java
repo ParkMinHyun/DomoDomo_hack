@@ -24,7 +24,7 @@ public class UserSettings {
 
     // default color
     private static int DEFAULT_TITLE_TEXT_COLOR = 0xFFFFFFFF; // white
-    private static int DEFAULT_TITLE_BAR_COLOR = 0xFFF58535; // orange
+    private static int DEFAULT_TITLE_BAR_COLOR = 0xFFFFFFFF; // orange
     private static int DEFAULT_TITLE_BACKGROUND_COLOR = 0xFFFFFFFF; // white
     private int titleTextColor = DEFAULT_TITLE_TEXT_COLOR;
     private int titleBarColor = DEFAULT_TITLE_BAR_COLOR;

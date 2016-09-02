@@ -50,7 +50,6 @@ import ensharp.tapcorder.MobileHub.mobile.mysampleapp.demo.content.ContentUtils;
 import ensharp.tapcorder.MobileHub.mobile.mysampleapp.util.ContentHelper;
 import ensharp.tapcorder.MobileHub.mobile.util.ImageSelectorUtils;
 import ensharp.tapcorder.MobileHub.mobile.util.S3Utils;
-import ensharp.tapcorder.MobileHub.mobile.util.StringFormatUtils;
 import ensharp.tapcorder.R;
 
 public class UserFilesBrowserFragment extends DemoFragmentBase
@@ -150,8 +149,7 @@ public class UserFilesBrowserFragment extends DemoFragmentBase
     }
 
     private void updatePath() {
-        pathTextView.setText(getString(R.string.content_path_prefix_text)
-            + (currentPath.isEmpty() ? "./" : currentPath));
+        pathTextView.setText("");
     }
 
     @Override
@@ -624,12 +622,6 @@ public class UserFilesBrowserFragment extends DemoFragmentBase
         final long limitBytes = userFileManager.getContentCacheSize();
         final long usedBytes = userFileManager.getCacheUsedSize();
         final long pinnedBytes = userFileManager.getPinnedSize();
-
-        cacheLimitTextView.setText(StringFormatUtils.getBytesString(limitBytes, false));
-        cacheInUseTextView.setText(StringFormatUtils.getBytesString(usedBytes, false));
-        cacheAvailableTextView.setText(StringFormatUtils.getBytesString(
-            limitBytes - usedBytes, false));
-        cachePinnedTextView.setText(StringFormatUtils.getBytesString(pinnedBytes, false));
     }
 
     private void refreshContent(final String newCurrentPath) {
