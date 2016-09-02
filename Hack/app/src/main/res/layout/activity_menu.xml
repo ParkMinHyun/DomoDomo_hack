@@ -4,48 +4,65 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:weightSum="1">
+    android:background="#f4f2f3">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="     DOMODOMO"
+        android:textSize="20dp"
+        android:gravity="fill_horizontal|center"
+        android:background="#9D9DFF" />
 
     <Button
         android:textSize="25dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Record"
+        android:layout_height="130dp"
+        android:text="알    람"
         android:id="@+id/btn_Record"
-        android:layout_weight="0.25"
         android:layout_gravity="center_horizontal"
-        android:background="#4ECDC4"/>
+        android:background="@drawable/btnmenu1_bg"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:drawableRight="@drawable/alarmpic"/>
 
     <Button
         android:textSize="25dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Play Music"
+        android:layout_height="130dp"
+        android:text="음악 재생"
         android:id="@+id/btn_Music"
-        android:layout_weight="0.25"
         android:layout_gravity="center_horizontal"
-        android:background="#C7F464"/>
+        android:background="@drawable/btnmenu2_bg"
+        android:layout_marginBottom="8dp"
+        android:drawableRight="@drawable/musicpic"/>
 
     <Button
         android:textSize="25dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="LED"
+        android:layout_height="130dp"
+        android:text="LED 테마"
         android:id="@+id/btn_LED"
-        android:layout_weight="0.25"
         android:layout_gravity="center_horizontal"
-        android:background="#FF6B6B"
-        />
+        android:background="@drawable/btnmenu3_bg"
+        android:layout_marginBottom="8dp"
+        android:drawableRight="@drawable/ledpic"/>
 
     <Button
         android:textSize="25dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Download Music"
+        android:layout_height="130dp"
+        android:text="다운로드 테마"
         android:id="@+id/btn_Downmusic"
-        android:layout_weight="0.25"
         android:layout_gravity="center_horizontal"
-        android:background="#C44D58"/>
+        android:background="@drawable/btnmenu4_bg"
+        android:layout_marginBottom="10dp"
+        android:drawableRight="@drawable/downpic"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:gravity="fill_horizontal|center"
+        android:background="#9999cc" />
 
 </LinearLayout>

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -38,25 +39,31 @@ public class MainActivity extends BT_Preference {
         Intent intent=new Intent(this,Splash.class);
         this.startActivity(intent);
 
+        Typeface tf_menu = Typeface.createFromAsset(getAssets(), "BMJUA_ttf.ttf");
+
         btn_record = (Button)findViewById(R.id.btn_Record);
+        btn_record.setTypeface(tf_menu);
         btn_record.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
                 startActivity(new Intent(MainActivity.this, ProgressRecorder.class));
             }
         });
         btn_musicFiles = (Button)findViewById(R.id.btn_Music);
+        btn_musicFiles.setTypeface(tf_menu);
         btn_musicFiles.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
                 startActivity(new Intent(MainActivity.this, Activity_Music.class));
             }
         });
         btn_LED = (Button)findViewById(R.id.btn_LED);
+        btn_LED.setTypeface(tf_menu);
         btn_LED.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
                 startActivity(new Intent(MainActivity.this, Activity_LED.class));
             }
         });
         btn_downMusic =(Button)findViewById(R.id.btn_Downmusic);
+        btn_downMusic.setTypeface(tf_menu);
         btn_downMusic.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
 
