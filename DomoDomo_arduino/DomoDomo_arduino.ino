@@ -20,6 +20,8 @@ Adafruit_VS1053_FilePlayer musicPlayer =
 unsigned long prev_LED1_Millis = 0;
 bool led_version1 = false;
 bool led_version2 = false;
+bool led_stop = false;
+
 int led_version1_State = LOW;
 int blueTx=6;
 int blueRx=5;
@@ -36,11 +38,11 @@ bool LED_put_off = false;
 
 
 
-
 void setup() {
   mySerial.begin(9600);
   Serial.begin(9600);
   pinMode(2,INPUT_PULLUP);
+  pinMode(7,INPUT_PULLUP);
 
   if (! musicPlayer.begin()) { 
       while (1);
@@ -53,8 +55,11 @@ void setup() {
   
 void loop() {
   int play_stop_button = digitalRead(2);
-  unsigned long current_LED1_Millis = millis(); 
+  int change_LED = digitalRead(7);
   
+  unsigned long current_LED1_Millis = millis(); 
+
+  //Serial.println(current_LED1_Millis - prev_LED1_Millis);
   while(mySerial.available())
   {
     char myChar = (char)mySerial.read();
@@ -68,10 +73,17 @@ void loop() {
      Serial.println("Input value = "+ myString);
   }
   
+  if ( (change_LED == 0 || bluetooth_serial_num == 20 || bluetooth_serial_num == 21)
+       && current_LED1_Millis - prev_LED1_Millis >= 1000)
+  {
+      changeLED();
+      prev_LED1_Millis = current_LED1_Millis;
+  }
+  
   /* LED 버전1 Millis 함수로 구현 */
+  
   if(current_LED1_Millis - prev_LED1_Millis >= 1000 && led_version1)
   { 
-      led_version2 = false;
       LED_ver1();
       prev_LED1_Millis = current_LED1_Millis;
   }
@@ -79,10 +91,10 @@ void loop() {
   /* LED 버전2 함수로 구현 */
   if(current_LED1_Millis - prev_LED1_Millis >= 1000 && led_version2)
   {
-      led_version1 = false;
       LED_ver2();
       prev_LED1_Millis = current_LED1_Millis;
   }
+  
 
   if(bluetooth_serial_num == 0)
   {
@@ -96,17 +108,6 @@ void loop() {
   {
      musicPlayer.startPlayingFile("002.mp3");
   }
-  else if(bluetooth_serial_num == 20)
-  {
-      led_version1 = true;
-      led_version2 = false;
-  }
-  else if(bluetooth_serial_num == 21)
-  {
-     Serial.println("Input value = dddd");
-      led_version2 = true;
-      led_version1 = false;
-  }
   
   if (play_stop_button == 0) 
   {
@@ -119,6 +120,7 @@ void loop() {
         musicPlayer.pausePlaying(false);
       }
   }
+
     /*
   if (play_stop_button == 0) 
   {
@@ -129,6 +131,40 @@ void loop() {
   bluetooth_serial_num = 99;
 }
 
+
+void changeLED()
+{ 
+     if ( led_version1 == false && led_version2 == false && led_stop == false )
+     {
+        led_version1 = true;
+     }
+     
+     if( led_version1 == true )
+      {
+     Serial.println("1");
+         led_version1 = false;
+         led_version2 = true;
+         led_stop = false;
+      }
+      else if ( led_version2 == true)
+      {
+     Serial.println("2");
+         led_version1 = false;
+         led_version2 = false;
+         led_stop = true;
+      }
+      else if ( led_stop == true )
+      {
+     Serial.println("X");
+         LED_OFF();
+         led_version1 = true;
+         led_version2 = false;
+         led_stop = false;
+      }
+  
+}
+     
+      
 void LED_ver1 ()
 {
       for(int i=0; i<4; i++)
@@ -147,6 +183,7 @@ void LED_ver1 ()
       for(int i=0; i<4; i++)
       {
         musicPlayer.GPIO_digitalWrite(i, led_version1_State);
+
       }
 }
 
