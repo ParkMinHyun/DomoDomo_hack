@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -17,9 +18,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.io.File;
@@ -31,13 +35,13 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
+import ensharp.tapcorder.Arduino.ScreenReceiver;
 import ensharp.tapcorder.BT_Preference;
 import ensharp.tapcorder.MainActivity;
 import ensharp.tapcorder.R;
-import ensharp.tapcorder.Arduino.ScreenReceiver;
 //import Smarthangles.org.R;
 
-public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnInitListener,View.OnClickListener, MediaPlayer.OnCompletionListener {
+public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnInitListener, View.OnClickListener, MediaPlayer.OnCompletionListener {
 
 //    class MyThread extends Thread {
 //        @Override
@@ -71,10 +75,13 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
     byte[] readBuffer;
     int readBufferPosition;
     int counter;
+    int check = 0;
     volatile boolean stopWorker;
+    public static int hours, minutes, nowHours, nowMinutes, nowSeconds;
+    private AsyncTask alarmTask;
 
 
-/////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////
     //대량의 문자열 데이터를 저장할 Arraylist 객체 생성
     ArrayList<String> mDatas = new ArrayList<String>();
 
@@ -93,7 +100,7 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
     private int mRecState = REC_STOP;
     private int mPlayerState = PLAY_STOP;
     private SeekBar mRecProgressBar, mPlayProgressBar;
-    private Button mBtnStartRec, mBtnStartPlay;
+    private Button mBtnStartRec, mBtnStartPlay, btnAlarmCheck;
     private String mFileName = "recordFile1.amr";
 
     private TextView mTvPlayMaxPoint;
@@ -101,8 +108,8 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
     private int mCurRecTimeMs = 0;
     private int mCurProgressTimeDisplay = 0;
 
-    private String newRecordFile="recordFile1"; //녹음파일이 null일때 파일명 시작값
-    private String mFilePath ; //녹음파일 디렉터리 위치
+    private String newRecordFile = "recordFile1"; //녹음파일이 null일때 파일명 시작값
+    private String mFilePath; //녹음파일 디렉터리 위치
 
     // 녹음시 SeekBar처리(old Version)
 //    Handler mProgressHandler = new Handler() {
@@ -154,6 +161,11 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
+
+//        Intent intent = getIntent();
+//        check = intent.getExtras().getInt("check");
+
+
 ///////////////////////////////////////////////////
         SharedPreferences mPairedSettings;
         mPairedSettings = getSharedPreferences(BT_PREFERENCE, Context.MODE_PRIVATE);
@@ -162,7 +174,8 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
             // 사실 선택하지 않으면 이 화면으로 오지 않는다
         }
         devicename = mPairedSettings.getString(BP_PREFERENCES_PAIRED_DEVICE, "");
-        info_textview = 			(TextView) findViewById(R.id.textview_info);
+        info_textview = (TextView) findViewById(R.id.textview_info);
+
 
         // 스크린이 꺼지면 bluetooth를 자동으로 연결 끊기 위해서 BroadcastReceiver 설정
         // 전화가 온다거나 다른 작업을 할 경우에는 블루투스 연결을 끊도록 하기위해서
@@ -177,29 +190,69 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
         ///////////////////////////////////////////
         // SD카드에 디렉토리를 만든다.
         mFilePath = MakeRecordDir.makeDir("progress_recorder");
-        Log.i("mFilePath~~??",mFilePath); ///storage/emulated/0/progress_recorder/
+        Log.i("mFilePath~~??", mFilePath); ///storage/emulated/0/progress_recorder/
 
-        mBtnStartRec = (Button) findViewById(R.id.btnStartRec);
-        mBtnStartPlay = (Button) findViewById(R.id.btnStartPlay);
-        mRecProgressBar = (SeekBar) findViewById(R.id.recProgressBar);
-        mPlayProgressBar = (SeekBar) findViewById(R.id.playProgressBar);
-        mTvPlayMaxPoint = (TextView) findViewById(R.id.tvPlayMaxPoint);
+//        mBtnStartRec = (Button) findViewById(R.id.btnStartRec);
+//        mBtnStartPlay = (Button) findViewById(R.id.btnStartPlay);
+//        mRecProgressBar = (SeekBar) findViewById(R.id.recProgressBar);
+//        mPlayProgressBar = (SeekBar) findViewById(R.id.playProgressBar);
+//        mTvPlayMaxPoint = (TextView) findViewById(R.id.tvPlayMaxPoint);
 
-        mBtnStartRec.setOnClickListener(this);
-        mBtnStartPlay.setOnClickListener(this);
+//        mBtnStartRec.setOnClickListener(this);
+//        mBtnStartPlay.setOnClickListener(this);
+
+        Switch alarmSwitch = (Switch) findViewById(R.id.alarm_on_off);
+        alarmSwitch.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+
+                } else {
+                    check = 0;
+                }
+            }
+        });
 
 
-        Log.i("~~progrRecorder~~mRoot",mFilePath);
+        btnAlarmCheck = (Button) findViewById(R.id.btn_alarm_check);
+        btnAlarmCheck.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    sendData(String.valueOf(hours)+":"+String.valueOf(minutes)+":00");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+//                SimpleDateFormat formatter1 = new SimpleDateFormat("HH", Locale.KOREA);
+//                SimpleDateFormat formatter2 = new SimpleDateFormat("mm", Locale.KOREA);
+//                SimpleDateFormat formatter3 = new SimpleDateFormat("ss", Locale.KOREA);
+//                Date currentTime = new Date();
+//                final String dTime1 = formatter1.format(currentTime);
+//                final String dTime2 = formatter2.format(currentTime);
+//                final String dTime3 = formatter3.format(currentTime);
+//                nowHours = Integer.parseInt(dTime1);
+//                nowMinutes = Integer.parseInt(dTime2);
+//                nowSeconds = Integer.parseInt(dTime3);
+//                alarmTask = new AlarmCheck().execute();
+//                try {
+//                    sendData("Start Alarm");
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                Toast.makeText(ProgressRecorder.this, "알람 설정 완료", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Log.i("~~progrRecorder~~mRoot", mFilePath);
         String[] fileList = getFileList(mFilePath);
-        for(int i=0; i < fileList.length; i++)
-        {
+        for (int i = 0; i < fileList.length; i++) {
             Log.d("~~~~fileList[i]~~~", fileList[i]);
             mDatas.add(fileList[i]); //리스트뷰에 디렉터리에 있는 파일띄우기
         }
         //fileList다음으로 등록할 recordFile명 지정
-        if(fileList.length!=0){
-            newRecordFile="recordFile"+String.valueOf(fileList.length+1);
-            Log.d("~~~~newrecordFile명::",newRecordFile);
+        if (fileList.length != 0) {
+            newRecordFile = "recordFile" + String.valueOf(fileList.length + 1);
+            Log.d("~~~~newrecordFile명::", newRecordFile);
         }
 
         //ListView가 보여줄 뷰를 만들어내는 Adapter 객체 생성
@@ -209,13 +262,42 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
         //세번째 파라미터 : adapter가 뷰로 만들어줄 대량의 데이터들
         //본 예제에서는 문자열만 하나씩 보여주면 되기 때문에 두번째 파라미터의 뷰 모먕은 Android 시스템에서 제공하는
         //기본 Layout xml 파일을 사용함.
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, mDatas);
-        listview = (ListView) findViewById(R.id.listview_rec);
-        listview.setAdapter(adapter); //위에 만들어진 Adapter를 ListView에 설정 : xml에서 'entries'속성
+//        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, mDatas);
+//        listview = (ListView) findViewById(R.id.listview_rec);
+//        listview.setAdapter(adapter); //위에 만들어진 Adapter를 ListView에 설정 : xml에서 'entries'속성
 
         //ListView의 아이템 하나가 클릭되는 것을 감지하는 Listener객체 설정 (Button의 OnClickListener와 같은 역할)
-        listview.setOnItemClickListener(listener);
+//        listview.setOnItemClickListener(listener);
 
+        TimePicker alarm = (TimePicker) findViewById(R.id.alarmTime);
+        alarm.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker timePicker, int hour, int minute) {
+                hours = hour;
+                minutes = minute;
+//                Toast.makeText(ProgressRecorder.this, String.valueOf(hours) + String.valueOf(minutes), Toast.LENGTH_SHORT).show();
+//                    try {
+//                        sendData(String.valueOf(0));
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+
+            }
+        });
+//        if (check == 1) {
+//            Toast.makeText(ProgressRecorder.this, "성공", Toast.LENGTH_SHORT).show();
+//            try {
+//                sendData("hi");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//
+//        }
+//        else
+//        {
+//            tts = new TextToSpeech(this, this);
+//        }
 
     }
 
@@ -224,13 +306,13 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
         // 폴더 경로를 지정해서 File 객체 생성
         File fileRoot = new File(strPath);
         // 해당 경로가 폴더가 아니라면 함수 탈출
-        if( fileRoot.isDirectory() == false ) {
-            Log.i("getFileList~~","해당 경로가 폴더가 아닙니다");
+        if (fileRoot.isDirectory() == false) {
+            Log.i("getFileList~~", "해당 경로가 폴더가 아닙니다");
             return null;
         }
         // 파일 목록을 구한다
         String[] fileList = fileRoot.list();
-        Log.i("~~~getfileList~~Count","fileList의 갯수는 "+ fileList.length);
+        Log.i("~~~getfileList~~Count", "fileList의 갯수는 " + fileList.length);
         return fileList;
     }
 
@@ -298,21 +380,21 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
 
     // 버튼의 OnClick 이벤트 리스너
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnStartRec:
-
-                mBtnStartRecOnClick();
-                break;
-            case R.id.btnStartPlay:
-                try {
-                    mBtnStartPlayOnClick(mFileName);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                break;
-            default:
-                break;
-        }
+//        switch (v.getId()) {
+//            case R.id.btnStartRec:
+//
+//                mBtnStartRecOnClick();
+//                break;
+//            case R.id.btnStartPlay:
+//                try {
+//                    mBtnStartPlayOnClick(mFileName);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                break;
+//            default:
+//                break;
+//        }
     }
 
     //REC버튼 눌렀을때 녹음 시작 및 종료 메서드(리스트뷰에 리스트 추가)
@@ -325,7 +407,7 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
 
 
             //리스트뷰 문자열 데이터 ArrayList에 추가
-            mDatas.add(newRecordFile+".amr");
+            mDatas.add(newRecordFile + ".amr");
             ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, mDatas);
             listview = (ListView) findViewById(R.id.listview_rec);
             listview.setAdapter(adapter); //위에 만들어진 Adapter를 ListView에 설정 : xml에서 'entries'속성
@@ -364,8 +446,8 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
             mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mRecorder.setOutputFormat(MediaRecorder.OutputFormat.RAW_AMR);
             mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-            mRecorder.setOutputFile(mFilePath+newRecordFile+".amr"); //newRecordFile명의 음성파일에 음성 녹음.
-            Log.d("setoutputFile문제??",newRecordFile+".amr");
+            mRecorder.setOutputFile(mFilePath + newRecordFile + ".amr"); //newRecordFile명의 음성파일에 음성 녹음.
+            Log.d("setoutputFile문제??", newRecordFile + ".amr");
             mRecorder.prepare();
             mRecorder.start();
         } catch (IllegalStateException e) {
@@ -390,7 +472,7 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
 //        mProgressHandler.sendEmptyMessageDelayed(0, 0);
     }
 
-    private void mBtnStartPlayOnClick(String mFileName) throws IOException{
+    private void mBtnStartPlayOnClick(String mFileName) throws IOException {
         if (mPlayerState == PLAY_STOP) {
             mPlayerState = PLAYING;
             startPlay(mFileName);
@@ -489,6 +571,7 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
             mBtnStartPlay.setText("Stop");
 
     }
+
     @Override
     public void onBackPressed() {
         try
@@ -501,7 +584,7 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
                 Thread.sleep(500);
 
             } catch (InterruptedException e) { }
-            //closeBT();
+            closeBT();
             try {
 
                 Thread.sleep(1000);
@@ -518,8 +601,8 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
 
         super.onBackPressed();
     }
-    public void sendData(String msg) throws IOException
-    {
+
+    public void sendData(String msg) throws IOException {
         //String msg = myTextbox.getText().toString();
         msg = msg.trim();
         msg += "\n";
@@ -541,13 +624,11 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
                 // btnSpeak.setEnabled(true);
                 speakOut("start");
 
-                try
-                {
+                try {
                     findBT();
                     openBT();
 
-                }
-                catch (IOException ex) {
+                } catch (IOException ex) {
                     speakOut("fail to open connection.");
                     startActivity(new Intent(ProgressRecorder.this, MainActivity.class));
 
@@ -588,7 +669,7 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
                     Thread.sleep(1000);
 
                 } catch (InterruptedException e) { }
-                //closeBT();
+                closeBT();
 
 
 
@@ -605,27 +686,21 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
     }
 
     // 페어링된 기기중에서 사용자가 선택한 블루투스를 실제로 찾는다.
-    void findBT()
-    {
+    void findBT() {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if(mBluetoothAdapter == null)
-        {
+        if (mBluetoothAdapter == null) {
             speakOut("No bluetooth adapter available");
         }
 
-        if(!mBluetoothAdapter.isEnabled())
-        {
+        if (!mBluetoothAdapter.isEnabled()) {
             Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBluetooth, 0);
         }
 
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-        if(pairedDevices.size() > 0)
-        {
-            for(BluetoothDevice device : pairedDevices)
-            {
-                if(device.getName().equals(devicename))
-                {
+        if (pairedDevices.size() > 0) {
+            for (BluetoothDevice device : pairedDevices) {
+                if (device.getName().equals(devicename)) {
                     mmDevice = device;
                     break;
                 }
@@ -635,8 +710,7 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
     }
 
     //찾은 블루투스를 안드로이드 폰과 연결한다
-    void openBT() throws IOException
-    {
+    void openBT() throws IOException {
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"); //Standard SerialPortService ID
         mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
         mmSocket.connect();
@@ -646,7 +720,6 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
 
         speakOut("Connection Opened");
         is_connected = true;
-
 
 
         String msg = "start";
@@ -660,8 +733,7 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
 
 
     //블루투스를 안드로이드와 연결 해제한다.
-    void closeBT() throws IOException
-    {
+    void closeBT() throws IOException {
         String msg = "stop";
         msg += "\n";
         mmOutputStream.write(msg.getBytes());
@@ -669,11 +741,8 @@ public class ProgressRecorder extends BT_Preference implements TextToSpeech.OnIn
 
             Thread.sleep(100);
 
-        } catch (InterruptedException e) { }
-
-
-
-
+        } catch (InterruptedException e) {
+        }
 
 
         stopWorker = true;
