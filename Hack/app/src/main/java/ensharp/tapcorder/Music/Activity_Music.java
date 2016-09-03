@@ -3,10 +3,8 @@ package ensharp.tapcorder.Music;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -96,10 +94,10 @@ public class Activity_Music extends BT_Preference implements TextToSpeech.OnInit
         // 계속 연결 상태를 유지 하려면 이부분을 없애면 됩니다.
 
         tts = new TextToSpeech(this, this);
-        final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        final BroadcastReceiver mReceiver = new ScreenReceiver();
-        registerReceiver(mReceiver, filter);
+//        final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+//        filter.addAction(Intent.ACTION_SCREEN_OFF);
+//        final BroadcastReceiver mReceiver = new ScreenReceiver();
+//        registerReceiver(mReceiver, filter);
     }
 
 

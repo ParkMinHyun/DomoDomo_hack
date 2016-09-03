@@ -143,11 +143,11 @@ public class ControlArduino extends BT_Preference implements TextToSpeech.OnInit
         mFilePath = MakeRecordDir.makeDir("progress_recorder");
         Log.i("mFilePath~~??",mFilePath); ///storage/emulated/0/progress_recorder/
 
-        mBtnStartRec = (Button) findViewById(R.id.btnStartRec);
-        mBtnStartPlay = (Button) findViewById(R.id.btnStartPlay);
-        mRecProgressBar = (SeekBar) findViewById(R.id.recProgressBar);
-        mPlayProgressBar = (SeekBar) findViewById(R.id.playProgressBar);
-        mTvPlayMaxPoint = (TextView) findViewById(R.id.tvPlayMaxPoint);
+//        mBtnStartRec = (Button) findViewById(R.id.btnStartRec);
+//        mBtnStartPlay = (Button) findViewById(R.id.btnStartPlay);
+//        mRecProgressBar = (SeekBar) findViewById(R.id.recProgressBar);
+//        mPlayProgressBar = (SeekBar) findViewById(R.id.playProgressBar);
+//        mTvPlayMaxPoint = (TextView) findViewById(R.id.tvPlayMaxPoint);
 
         mBtnStartRec.setOnClickListener(this);
         mBtnStartPlay.setOnClickListener(this);
@@ -262,21 +262,21 @@ public class ControlArduino extends BT_Preference implements TextToSpeech.OnInit
 
     // 버튼의 OnClick 이벤트 리스너
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnStartRec:
-
-                mBtnStartRecOnClick();
-                break;
-            case R.id.btnStartPlay:
-                try {
-                    mBtnStartPlayOnClick(mFileName);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                break;
-            default:
-                break;
-        }
+//        switch (v.getId()) {
+//            case R.id.btnStartRec:
+//
+//                mBtnStartRecOnClick();
+//                break;
+//            case R.id.btnStartPlay:
+//                try {
+//                    mBtnStartPlayOnClick(mFileName);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                break;
+//            default:
+//                break;
+//        }
     }
 
     //REC버튼 눌렀을때 녹음 시작 및 종료 메서드(리스트뷰에 리스트 추가)

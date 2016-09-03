@@ -62,6 +62,7 @@ void loop() {
   unsigned long current_LED1_Millis = millis(); 
 
   //Serial.println(current_LED1_Millis - prev_LED1_Millis);
+
   while(mySerial.available())
   {
     char myChar = (char)mySerial.read();

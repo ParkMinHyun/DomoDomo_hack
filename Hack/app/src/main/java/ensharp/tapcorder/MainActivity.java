@@ -31,10 +31,14 @@ public class MainActivity extends BT_Preference {
     Button btn_LED;
     Button btn_downMusic;
 
+    public static Context context;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
+        context = this;
 
         Intent intent=new Intent(this,Splash.class);
         this.startActivity(intent);
@@ -45,9 +49,17 @@ public class MainActivity extends BT_Preference {
         btn_record.setTypeface(tf_menu);
         btn_record.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
-                startActivity(new Intent(MainActivity.this, ProgressRecorder.class));
+                Intent intent = new Intent(MainActivity.this,ProgressRecorder.class);
+                intent.putExtra("check",0);
+                startActivity(intent);
             }
         });
+//        if(AlarmCheck.check==1)
+//        {
+//            Intent intent_A = new Intent(MainActivity.this,ProgressRecorder.class);
+//            intent_A.putExtra("check",1);
+//            startActivity(intent_A);
+//        }
         btn_musicFiles = (Button)findViewById(R.id.btn_Music);
         btn_musicFiles.setTypeface(tf_menu);
         btn_musicFiles.setOnClickListener(new Button.OnClickListener(){

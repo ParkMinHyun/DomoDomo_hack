@@ -3,138 +3,46 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:text="     Record"
+        android:text="     알람"
         android:textSize="20dp"
         android:id="@+id/textView2"
         android:gravity="fill_horizontal|center"
         android:background="#C7F464" />
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Off / On   "
+            android:id="@+id/alarm_on_off"
+            android:checked="false"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="33dp"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
     <!-- progress bar -->
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@null"
-        android:gravity="center_vertical|center_horizontal"
-        android:orientation="vertical" >
-
-        <SeekBar
-            android:id="@+id/recProgressBar"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:max="60000"
-            android:padding="10dp"
-            android:progress="0" />
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:gravity="center_vertical"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/tvRecStartPoint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_gravity="center_vertical|left"
-                android:text="00:00"
-                android:textColor="#FFFFFF"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/tvRecMaxPoint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_gravity="center_vertical|right"
-                android:text="01:00"
-                android:textColor="#FFFFFF"
-                android:textSize="12sp" />
-        </RelativeLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@null"
-        android:gravity="center_vertical|center_horizontal"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/btnStartRec"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Rec"
-            android:textSize="14sp" />
-
-    </LinearLayout>
 
     <!-- progress bar -->
 
-    <LinearLayout
-        android:layout_width="fill_parent"
+
+    <TimePicker
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:gravity="center_vertical|center_horizontal"
-        android:orientation="vertical" >
+        android:id="@+id/alarmTime"
+        android:layout_gravity="center_horizontal" />
 
-        <SeekBar
-            android:id="@+id/playProgressBar"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:max="60000"
-            android:padding="10dp"
-            android:progress="0" />
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:gravity="center_vertical"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/tvPlayStartPoint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_gravity="center_vertical|left"
-                android:text="00:00"
-                android:textColor="#FFFFFF"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/tvPlayMaxPoint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_gravity="center_vertical|right"
-                android:text="01:00"
-                android:textColor="#FFFFFF"
-                android:textSize="12sp" />
-        </RelativeLayout>
-    </LinearLayout>
-
-    <LinearLayout
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:gravity="center_vertical|center_horizontal"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/btnStartPlay"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Play"
-            android:textSize="14sp" />
-    </LinearLayout>
-
+        android:text="저장"
+        android:id="@+id/btn_alarm_check"
+        android:layout_gravity="center_horizontal" />
 
     <ListView
         android:id="@+id/listview_rec"
