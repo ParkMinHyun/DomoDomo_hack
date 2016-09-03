@@ -2,6 +2,8 @@
 #include <SPI.h>
 #include <Adafruit_VS1053.h>
 #include <SD.h>
+#include <TimeLib.h>
+#include <TimeAlarms.h>
 
 #define BREAKOUT_RESET  9      // VS1053 reset pin (output)
 #define BREAKOUT_CS     10     // VS1053 chip select pin (output)
@@ -53,12 +55,20 @@ void setup() {
   SD.begin(CARDCS);    // initialise the SD card
   musicPlayer.setVolume(20,20);
   musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT);  // DREQ int
-}
+
+  setTime(8,29,0,1,1,11); // set time to Saturday 8:29:00am Jan 1 2011
   
+  // create the alarms, to trigger at specific times
+  Alarm.alarmRepeat(8,29,10, MorningAlarm);  // 8:30am every day
+}
+
 void loop() {
   int play_stop_button = digitalRead(2);
   int change_LED = digitalRead(7);
+
   
+  digitalClockDisplay();
+  Alarm.delay(100);
   unsigned long current_LED1_Millis = millis(); 
 
   //Serial.println(current_LED1_Millis - prev_LED1_Millis);
@@ -66,6 +76,7 @@ void loop() {
   {
     char myChar = (char)mySerial.read();
     myString = myString + myChar; 
+
     bluetooth_serial_num = myString.toInt();
     delay(10);
   }
@@ -75,7 +86,7 @@ void loop() {
      Serial.println("Input value = "+ myString);
   }
   
-  if ( (change_LED == 0 || bluetooth_serial_num == 20 || bluetooth_serial_num == 21)
+  if ( (change_LED == 0 )
        && current_LED1_Millis - prev_LED1_Millis >= 500)
   {
       changeLED();
@@ -83,7 +94,6 @@ void loop() {
   }
   
   /* LED 버전1 Millis 함수로 구현 */
-  
   if(current_LED1_Millis - prev_LED1_Millis >= 1000 && led_version1)
   { 
       LED_ver1();
@@ -96,7 +106,17 @@ void loop() {
       LED_ver2();
       prev_LED1_Millis = current_LED1_Millis;
   }
-  
+
+  if( bluetooth_serial_num == 20 )
+  {
+    led_version1 = true;
+    led_version2 = false;
+  }
+  if( bluetooth_serial_num == 21 )
+  {
+    led_version2 = true;
+    led_version1 = false;
+  }
 
   if( (bluetooth_serial_num == 0 || play_button_index == 1 ) &&  play_music == true)
   {
@@ -120,7 +140,7 @@ void loop() {
       play_button_index %= 3;
       play_music = true;
       
-     Serial.println(play_button_index);
+      Serial.println(play_button_index);
       prev_LED1_Millis = current_LED1_Millis;
       /*
       if (! musicPlayer.paused()) 
@@ -134,14 +154,38 @@ void loop() {
       */
   }
 
-    /*
-  if (play_stop_button == 0) 
-  {
-    musicPlayer.startPlayingFile("001.mp3");
+/*  
+  if (musicPlayer.stopped()) {
+    Serial.println("Done playing music");
+    while (1);
   }
- */
+  */
+ 
   myString="";
   bluetooth_serial_num = 99;
+}
+
+
+// functions to be called when an alarm triggers:
+void MorningAlarm() {
+     musicPlayer.startPlayingFile("002.mp3");
+  Serial.println("Alarm: - turn lights off");
+  
+}
+
+void digitalClockDisplay() {
+  // digital clock display of the time
+  Serial.print(hour());
+  printDigits(minute());
+  printDigits(second());
+  Serial.println();
+}
+
+void printDigits(int digits) {
+  Serial.print(":");
+  if (digits < 10)
+    Serial.print('0');
+  Serial.print(digits);
 }
 
 
