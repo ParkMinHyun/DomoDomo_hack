@@ -25,8 +25,8 @@ SoftwareSerial mySerial(blueTx,blueRx);
 
 unsigned long prev_LED1_Millis = 0;
 String myString="";
-
 int bluetooth_serial_num = 99;
+
 
 int led_version1_State = LOW;
 bool led_version1 = false;
@@ -42,7 +42,6 @@ bool LED_put_off = false;
 int play_button_index = 0;
 bool play_music = false;
 
-
 void setup() {
   mySerial.begin(9600);
   Serial.begin(9600);
@@ -57,46 +56,36 @@ void setup() {
   musicPlayer.setVolume(20,20);
   musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT);  // DREQ int
 
-/*
-  setTime(14,18,0,3,9,16); // set time to Saturday 8:29:00am Jan 1 2011
+  setTime(8,29,0,1,1,11); // set time to Saturday 8:29:00am Jan 1 2011
   
   // create the alarms, to trigger at specific times
-  Alarm.alarmRepeat(8,29,02, MorningAlarm);  // 8:30am every day*/
-  
-     musicPlayer.startPlayingFile("001.mp3");
-     Serial.println("하이");
+  Alarm.alarmRepeat(8,29,10, MorningAlarm);  // 8:30am every day
 }
 
 void loop() {
   int play_stop_button = digitalRead(2);
   int change_LED = digitalRead(7);
 
-  /*
+  
   digitalClockDisplay();
   Alarm.delay(100);
-*/
-  
   unsigned long current_LED1_Millis = millis(); 
 
-  
   //Serial.println(current_LED1_Millis - prev_LED1_Millis);
 
-  
   while(mySerial.available())
   {
     char myChar = (char)mySerial.read();
     myString = myString + myChar; 
-    
+
     bluetooth_serial_num = myString.toInt();
     delay(10);
   }
-
   
   if(!myString.equals(""))
   {
      Serial.println("Input value = "+ myString);
   }
-  
   
   if ( (change_LED == 0 )
        && current_LED1_Millis - prev_LED1_Millis >= 500)
@@ -105,9 +94,7 @@ void loop() {
       prev_LED1_Millis = current_LED1_Millis;
   }
   
-  
   /* LED 버전1 Millis 함수로 구현 */
-  
   if(current_LED1_Millis - prev_LED1_Millis >= 1000 && led_version1)
   { 
       LED_ver1();
@@ -115,14 +102,11 @@ void loop() {
   }
   
   /* LED 버전2 함수로 구현 */
-  
   if(current_LED1_Millis - prev_LED1_Millis >= 1000 && led_version2)
   {
       LED_ver2();
       prev_LED1_Millis = current_LED1_Millis;
   }
-  
-
 
   if( bluetooth_serial_num == 20 )
   {
@@ -135,48 +119,25 @@ void loop() {
     led_version1 = false;
   }
 
-  /*
   if( (bluetooth_serial_num == 0 || play_button_index == 1 ) &&  play_music == true)
   {
      musicPlayer.startPlayingFile("001.mp3");
-     Serial.println("1 play");
      play_music = false;
   }
   else if(bluetooth_serial_num == 1 || play_button_index == 2 && play_music == true)
   {
      musicPlayer.startPlayingFile("002.mp3");
-     Serial.println("2 play");
      play_music = false;
   }
   else if(bluetooth_serial_num == 2 || play_button_index == 0 && play_music == true)
   {
       musicPlayer.pausePlaying(true);
-     Serial.println("stop");
       play_music = false;
   }
-   
-
-  if ( bluetooth_serial_num == 0 && current_LED1_Millis - prev_LED1_Millis >= 1000  )
-  {
-     prev_LED1_Millis =  current_LED1_Millis ;
-     musicPlayer.startPlayingFile("001.mp3");
-     
-  }
-   else if ( bluetooth_serial_num == 1 && current_LED1_Millis - prev_LED1_Millis >= 1000 )
-   {
-     prev_LED1_Millis =  current_LED1_Millis ;
-     musicPlayer.startPlayingFile("002.mp3");
-   }
-   else if ( bluetooth_serial_num == 2 && current_LED1_Millis - prev_LED1_Millis >= 1000 )
-   {
-     prev_LED1_Millis =  current_LED1_Millis ;
-     musicPlayer.startPlayingFile("002.mp3");
-   }
-   
-   /*
+  
   if (play_stop_button == 0 && current_LED1_Millis - prev_LED1_Millis >= 500 ) 
   {
-      play_button_index ++;/
+      play_button_index ++;
       play_button_index %= 3;
       play_music = true;
       
@@ -191,10 +152,21 @@ void loop() {
       { 
         musicPlayer.pausePlaying(false);
       }
-      
+      */
+  }
+
+/*  
+  if (musicPlayer.stopped()) {
+    Serial.println("Done playing music");
+    while (1);
+  }
+/*  
+  if (musicPlayer.stopped()) {
+    Serial.println("Done playing music");
+    while (1);
   }
   */
-
+ 
   myString="";
   bluetooth_serial_num = 99;
 }
